@@ -1,0 +1,28 @@
+extends ./layout.jade
+
+block title
+	title= thread.title + " - ssf"
+
+prepend header
+	h1 View Thread
+
+block content
+	table(class = "thread")
+		each reply, i in thread.replies
+			tr(class = "thread-post-row")
+				td(class ="thread-poster")= reply.nickname
+				td(class = "thread-post")
+					table(class = "thread-post-header")
+						tr
+							td
+								strong= reply.title
+							td(class = "date")
+								a(name = "reply" + i.toString() href = "#reply" + i.toString())
+									| #{reply.time.toShortString()}
+					| #{reply.content}
+	div(id = "form-container")
+		p
+			| Respond below.
+			| If a password is given, a registered nickname will be used or created.
+			| Simple BBCode is enabled.
+		include ./post_form.inc.jade
