@@ -218,7 +218,12 @@ module.exports.db = {
 		}
 		else authenticate(nickname, password, function(err) {
 			var now = new Date();
-			var friendly_name = title.toLowerCase().split(" ").slice(0, 10).join("-");
+			var friendly_name = encodeURIComponent(title.toLowerCase().
+								replace("/", "").
+								replace("\\", "").
+								split(" ").
+								slice(0, 10).
+								join("-"));
 
 			threads.insertOne({
 				"title": title,

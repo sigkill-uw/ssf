@@ -49,6 +49,7 @@ module.exports.handle_request = function(params, request, response) {
 						}
 						else response.end("shit");
 					}
+					else if(!res) response.end("Fixme");
 					else
 					{
 						response.writeHead(303, {"Location": request.url});
@@ -64,6 +65,7 @@ module.exports.handle_request = function(params, request, response) {
 			{
 				/* TODO */
 			}
+			else if(!thread) response.end("Fixme");
 			else
 			{
 				var data = renderer({"thread": thread});

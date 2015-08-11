@@ -133,11 +133,13 @@ tr.thread-post-row:last-child
 #thread-feed td:nth-child(2)
 {
 	white-space: nowrap;
+	text-align: right;
 }
 
 #thread-feed td:nth-child(3)
 {
 	white-space: nowrap;
+	text-align:right;
 }
 
 textarea
