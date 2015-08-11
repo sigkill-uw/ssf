@@ -108,6 +108,15 @@ function authenticate(nickname, password, callback)
 	callback(null);
 }
 
+/* The original friendly name code was super buggy and vulnerable.
+ * Silly of me to let it in in the first place
+ * This purges any sketchy characters. I'm too proud to use regex */
+function getFriendlyName(title)
+{
+	return title.toLowerCase().split(" ").slice(0, 10).join("-").replace(/\W/g, '');
+}
+
+
 /* Driver */
 var mongodb = require("mongodb");
 
@@ -218,16 +227,10 @@ module.exports.db = {
 		}
 		else authenticate(nickname, password, function(err) {
 			var now = new Date();
-			var friendly_name = encodeURIComponent(title.toLowerCase().
-								replace("/", "").
-								replace("\\", "").
-								split(" ").
-								slice(0, 10).
-								join("-"));
 
 			threads.insertOne({
 				"title": title,
-				"friendly_name": friendly_name,
+				"friendly_name": getFriendlyName(title),
 				"last_reply_nickname": nickname,
 				"last_reply_time": now,
 				"reply_count": 1,

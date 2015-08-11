@@ -11,6 +11,9 @@ module.exports.handle_request= function(params, request, response) {
 		request.on("end", function() {
 			var post_data = qs.parse(raw);
 
+			sutil.logf("Request to create thread w/ title '%s', nickname '%s', content '%s'",
+				post_data.title, post_data.nickname, post_data.content);
+
 			sutil.db.createThread(
 					post_data.nickname,
 					post_data.password,
