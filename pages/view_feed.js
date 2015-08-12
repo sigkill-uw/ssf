@@ -1,6 +1,6 @@
 var sutil = require("../sutil.js");
 
-var renderer = require("jade").compileFile("templates/view_feed.jade");
+var renderer = sutil.wrapWithBuffer(require("jade").compileFile("templates/view_feed.jade"));
 
 module.exports.handle_request = function(params, request, response) {
 	sutil.db.fetchFeed(0, 999999999, function(err, threads) {

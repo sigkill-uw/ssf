@@ -1,7 +1,7 @@
 var sutil = require("../sutil.js");
 var qs = require("querystring");
 
-var renderer = require("jade").compileFile("templates/author_thread.jade");
+var renderer = sutil.wrapWithBuffer(require("jade").compileFile("templates/author_thread.jade"));
 
 module.exports.handle_request= function(params, request, response) {
 	if(request.method == "POST")

@@ -18,6 +18,16 @@ module.exports.logf = function() {
 /* Since we need to log within this file as well */
 logf = module.exports.logf;
 
+/* Jade template renderers return strings, not buffers
+ * This causes problems with Content-Length (multibyte characters)
+ * There's probably a better way of doing this - structuring a proper framework of some kind,
+ * but at this point in time it's easier to just wrap the Jade renderers with this */
+module.exports.wrapWithBuffer = function(fn) {
+	return function() {
+			return new Buffer(fn.apply(null, arguments));
+		};
+};
+
 /* Convenient addition to the Date class
  * We use this in our logging functions,
  * and also in view-feed and view-thread */
@@ -63,9 +73,11 @@ const emptyNickError = new FriendlyError("Nickname can't be empty");
 const longNickError = new FriendlyError("Nickname can't exceed 20 characters");
 const charsetNickError = new FriendlyError("Nickname must be alphanumeric only");
 const longPasswordError = new FriendlyError("Password can't exceed 32 characters");
-const longTitleError = new FriendlyError("Reply title can't exceed 200 characters");
+const emptyTitleError = new FriendlyError("Title can't be empty");
+const longTitleError = new FriendlyError("Title can't exceed 200 characters");
 const emptyContentError = new FriendlyError("Content can't be empty");
 const longContentError = new FriendlyError("Reply content can't exceed 4000 characters");
+const nonAsciiError = new FriendlyError("Non-ASCII characters are not supported");
 
 /* Another FriendlyError for a mangled or non-existant thread _id */
 const noSuchIDError = new FriendlyError("The requested thread couldn't be found", 404);
@@ -75,29 +87,30 @@ const noSuchIDError = new FriendlyError("The requested thread couldn't be found"
  * or true if the input is sane. */
 function sanitize(nickname, password, title, content)
 {
-	/* Check length */
 	if(nickname.length <= 0) return emptyNickError;
-	else if(nickname.length > 20) return longNickError;
-	else
-	{
-		/* Accept alphanumeric only */
-		nickname = nickname.toLowerCase();
-		for(var i = 0; i < nickname.length; i ++)
-			if("abcdefghijklmnopqrstuvwxyz0123456789".indexOf(nickname[i]) === -1)
-				return charsetNickError;
-	}
+	if(nickname.length > 20) return longNickError;
+	if(password.length > 32) return longPasswordError;
+	if(title.length <= 0) return emptyTitleError;
+	if(title.length > 200) return longTitleError;
+	if(content.length <= 0) return emptyContentError;
+	if(content.length > 4000) return longContentError;
 
-	if(password.length > 32)
-		return longPasswordError;
+	nickname = nickname.toLowerCase();
+	for(var i = nickname.length; i -- > 0;)
+		if("abcdefghijklmnopqrstuvwxyz0123456789".indexOf(nickname[i]) === -1)
+			return charsetNickError;
 
-	if(title.length > 200)
-		return longTitleError;
+/*	for(var i = password.length; i -- > 0;)
+		if(password.charCodeAt(i) < 32 || password.charCodeAt(i) > 126)
+			return nonAsciiError;
 
-	if(content.length <= 0)
-		return emptyContentError;
+	for(var i = title.length; i -- > 0;)
+		if(title.charCodeAt(i) < 32 || title.charCodeAt(i) > 126)
+			return nonAsciiError;
 
-	if(content.length > 4000)
-		return longContentError;
+	for(var i = content.length; i -- > 0;)
+		if(content.charCodeAt(i) < 32 || content.charCodeAt(i) > 126)
+			return nonAsciiError;*/
 
 	return true;
 }
@@ -220,6 +233,11 @@ module.exports.db = {
 	 * callback is of the form fn(err, id), where id is
 	 * the object ID of the inserted thread */
 	createThread: function(nickname, password, title, content, callback) {
+		nickname = nickname.strip();
+		password = password.strip();
+		title = title.strip();
+		content = content.strip();
+
 		var e = sanitize(nickname, password, title, content);
 		if(e !== true)
 		{
@@ -250,6 +268,11 @@ module.exports.db = {
 	 * callback is of the form fn(err, new_reply_count),
 	 * in order to allow pagination to be shifted to the final page */
 	createReply: function(thread_id, nickname, password, title, content, callback) {
+		nickname = nickname.strip();
+		password = password.strip();
+		title = title.strip();
+		content = content.strip();
+
 		var e = sanitize(nickname, password, title, content);
 
 		if(e !== true)

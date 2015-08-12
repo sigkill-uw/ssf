@@ -142,6 +142,23 @@ tr.thread-post-row:last-child
 	text-align:right;
 }
 
+#thread-feed th:nth-child(1)
+{
+	width: 100%;
+}
+
+#thread-feed th:nth-child(2)
+{
+	white-space: nowrap;
+	text-align:right;
+}
+
+#thread-feed th:nth-child(3)
+{
+	white-space: nowrap;
+	text-align:right;
+}
+
 textarea
 {
 	width: 100%;

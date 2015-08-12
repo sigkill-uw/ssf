@@ -1,7 +1,7 @@
 var sutil = require("../sutil.js");
 var qs = require("querystring");
 
-var renderer = require("jade").compileFile("templates/view_thread.jade");
+var renderer = sutil.wrapWithBuffer(require("jade").compileFile("templates/view_thread.jade"));
 
 module.exports.handle_request = function(params, request, response) {
 	var thread_id = params[1];
@@ -40,12 +40,12 @@ module.exports.handle_request = function(params, request, response) {
 								}
 								else
 								{
-									var data = renderer({
+									var data = new Buffer(renderer({
 										"thread": thread,
 										"form_error": fe,
 										"cached_nickname": post_data.nickname,
 										"cached_title": post_data.title,
-										"cached_content": post_data.content});
+										"cached_content": post_data.content}));
 
 									response.writeHead(200, {"Content-Type": "text/html", "Content-Length": data.length});
 									response.end(data);
