@@ -11,6 +11,11 @@ module.exports.handle_request= function(params, request, response) {
 		request.on("end", function() {
 			var post_data = qs.parse(raw);
 
+			if(!post_data.nickname) post_data.nickname = "";
+			if(!post_data.password) post_data.password = "";
+			if(!post_data.title) post_data.title = "";
+			if(!post_data.content) post_data.content = "";
+
 			sutil.logf("Request to create thread w/ title '%s', nickname '%s', content '%s'",
 				post_data.title, post_data.nickname, post_data.content);
 
