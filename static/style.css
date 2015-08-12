@@ -31,11 +31,12 @@ table
 	margin-left: auto;
 	margin-right: auto;
 	border-collapse: collapse;
-	width: 100%;
 
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box; 
+
+	width: 100%;
 }
 
 table.thread
@@ -72,6 +73,8 @@ td.date
 	font-size: 60%;
 	font-style: italic;
 	text-align: right;
+	position: relative;
+	top: -1px;
 }
 
 td.date a
@@ -125,37 +128,43 @@ tr.thread-post-row:last-child
 	border: none;
 }
 
+#thread-feed
+{
+	table-layout: fixed;
+}
+
 #thread-feed td:nth-child(1)
 {
-	width: 100%;
+	width: 75%;
+	word-wrap: break-word;
 }
 
 #thread-feed td:nth-child(2)
 {
-	white-space: nowrap;
+	width: 18%;
 	text-align: right;
 }
 
 #thread-feed td:nth-child(3)
 {
-	white-space: nowrap;
+	width: 7%;
 	text-align:right;
 }
 
 #thread-feed th:nth-child(1)
 {
-	width: 100%;
+	width: 75%;
 }
 
 #thread-feed th:nth-child(2)
 {
-	white-space: nowrap;
+	width: 18%;	
 	text-align:right;
 }
 
 #thread-feed th:nth-child(3)
 {
-	white-space: nowrap;
+	width: 7%;
 	text-align:right;
 }
 
@@ -180,7 +189,7 @@ textarea
 {
 	margin-left: auto;
 	margin-right: auto;
-	width: 800px;
+	width: 950px;
 	padding-left: 8%;
 	padding-right: 8%;
 	padding-bottom: 3%;
@@ -272,4 +281,9 @@ input.long-field
 .form-error
 {
 	color: red;
+}
+
+#content
+{
+	display: table;
 }

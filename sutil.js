@@ -122,8 +122,7 @@ function authenticate(nickname, password, callback)
 }
 
 /* The original friendly name code was super buggy and vulnerable.
- * Silly of me to let it in in the first place
- * This purges any sketchy characters. I'm too proud to use regex */
+ * Silly of me to let it in in the first place */
 function getFriendlyName(title)
 {
 	return title.toLowerCase().split(" ").slice(0, 10).join("-").replace(/\W/g, '');
@@ -233,10 +232,10 @@ module.exports.db = {
 	 * callback is of the form fn(err, id), where id is
 	 * the object ID of the inserted thread */
 	createThread: function(nickname, password, title, content, callback) {
-		nickname = nickname.strip();
-		password = password.strip();
-		title = title.strip();
-		content = content.strip();
+		nickname = nickname.trim();
+		password = password.trim();
+		title = title.trim();
+		content = content.trim();
 
 		var e = sanitize(nickname, password, title, content);
 		if(e !== true)
@@ -268,10 +267,10 @@ module.exports.db = {
 	 * callback is of the form fn(err, new_reply_count),
 	 * in order to allow pagination to be shifted to the final page */
 	createReply: function(thread_id, nickname, password, title, content, callback) {
-		nickname = nickname.strip();
-		password = password.strip();
-		title = title.strip();
-		content = content.strip();
+		nickname = nickname.trim();
+		password = password.trim();
+		title = title.trim();
+		content = content.trim();
 
 		var e = sanitize(nickname, password, title, content);
 

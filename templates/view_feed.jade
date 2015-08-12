@@ -19,5 +19,7 @@ block content
 					a(href = "view-thread/" + thread._id.toString() + "/" + thread.friendly_name)= thread.title
 				td(class = "date")
 					a(href = "view-thread/" + thread._id.toString() + "/" + thread.friendly_name)
-						| #{thread.last_reply_time.toShortString() + " by " + thread.last_reply_nickname}
+						| #{"By " + thread.last_reply_nickname}
+						br
+						| #{thread.last_reply_time.toShortString()}
 				td= thread.reply_count
