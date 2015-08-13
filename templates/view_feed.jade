@@ -20,7 +20,8 @@ block content
 				td
 					a(href = "/view-thread/" + thread._id.toString() + "/" + thread.friendly_name)= thread.title
 				td(class = "date")
-					a(href = "/view-thread/" + thread._id.toString() + "/" + thread.friendly_name)
+					a(href = "/view-thread/" + thread._id.toString() + "/" +
+						thread.friendly_name + "/" + (Math.ceil(thread.reply_count / 20) - 1).toString())
 						| #{thread.last_reply_nickname}
 						br
 						| #{thread.last_reply_time.toShortString()}

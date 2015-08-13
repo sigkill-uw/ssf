@@ -291,8 +291,7 @@ module.exports.db = {
 	},
 
 	/* fetchThreadReplyCount - fetches the number of replies for a given thread
-	 * For simplicity, callback is of the form fn(n) - no error field
-	 * If an error occurs n will be zero, but the caller has no reason to care */
+	 * callback is of the form fn(err, n) */
 	fetchThreadReplyCount: function(thread_id, callback) {
 		/* If the ID is mangled it's a 404 */
 		try
@@ -301,17 +300,17 @@ module.exports.db = {
 		}
 		catch(e)
 		{
-			callback(0);
+			callback(e, null);
 			return;
 		}
 
-		/* Select reply count for a given ID. Default to 0 */
+		/* Select reply count for a given ID */
 		threads.findOne(
 			{"_id": id},
 			{"reply_count": true},
 			function(err, result) {
-				if(err || !result) callback(0);
-				else callback(result.reply_count);
+				if(err || !result) callback(err, null);
+				else callback(null, result.reply_count);
 			});
 	},
 
