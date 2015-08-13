@@ -3,11 +3,11 @@
 **sigkill's Simple Forum** - a piece of forum software written in Node.js,
 running over HTTP with a MongoDB backend.
 
-ssf is loosely inspired by the charmingly bad forum software hosted on [LetsRun.com](letsrun.com).
+ssf is loosely inspired by the charmingly bad forum software hosted on [LetsRun.com](http://letsrun.com).
 
 ## Demo
 
-As of 13/08/2015, a sample deployment of this server is running at [rcode.ca:27017](rcode.ca:27017).
+As of 13/08/2015, a sample deployment of this server is running at [rcode.ca:27017](http://rcode.ca:27017).
 
 ## Dependencies
 
