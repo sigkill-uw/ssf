@@ -1,0 +1,4 @@
+div(class = "pagination")
+	select(onchange = "window.location = \"#{base_url}\" + this.options[this.selectedIndex].value;")
+		- for(var i = 0; i < page_count; i ++)
+			option(selected = (i == pagination_index) value = i)= i + 1

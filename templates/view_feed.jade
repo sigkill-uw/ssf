@@ -7,6 +7,8 @@ prepend header
 	h1 View Post Feed
 
 block content
+	include ./pagination_control.inc.jade
+
 	table(id="thread-feed" class="zebra")
 		tr
 			th(class="title") Post Title
@@ -15,11 +17,13 @@ block content
 
 		each thread in threads
 			tr
-				td(class = "title")
-					a(href = "view-thread/" + thread._id.toString() + "/" + thread.friendly_name)= thread.title
+				td
+					a(href = "/view-thread/" + thread._id.toString() + "/" + thread.friendly_name)= thread.title
 				td(class = "date")
-					a(href = "view-thread/" + thread._id.toString() + "/" + thread.friendly_name)
-						| #{"By " + thread.last_reply_nickname}
+					a(href = "/view-thread/" + thread._id.toString() + "/" + thread.friendly_name)
+						| #{thread.last_reply_nickname}
 						br
 						| #{thread.last_reply_time.toShortString()}
 				td= thread.reply_count
+
+	include ./pagination_control.inc.jade

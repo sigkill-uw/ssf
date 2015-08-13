@@ -7,19 +7,21 @@ prepend header
 	h1 View Thread
 
 block content
-	table(class = "thread")
+	include ./pagination_control.inc.jade
+	table#thread
 		each reply, i in thread.replies
-			tr(class = "thread-post-row")
-				td(class ="thread-poster")= reply.nickname
-				td(class = "thread-post")
-					table(class = "thread-post-header")
+			tr(class = "thread-reply")
+				td(class = "reply-nickname")= reply.nickname
+				td(class = "reply-content")
+					table(class = "reply-header")
 						tr
 							td
 								strong= reply.title
 							td(class = "date")
-								a(name = "reply" + i.toString() href = "#reply" + i.toString())
+								a(name = "reply" + i href = "#reply" + i)
 									| #{reply.time.toShortString()}
-					| #{reply.content}
+					| !{content_parser(reply.content)}
+	include ./pagination_control.inc.jade
 	div(id = "form-container")
 		p
 			| Respond below.

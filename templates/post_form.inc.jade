@@ -2,10 +2,10 @@
 - if(form_error)
 	p(class = "form-error")= form_error.toString() + "."
 form(action = "", method = "post")
-	input(type = "text", name = "nickname", maxlength = 20,
+	input(type = "text", name = "nickname", maxlength = 12,
 placeholder = "Nickname" value = cached_nickname)
 	input(type = "password", name = "password", maxlength = 32, placeholder = "Password")
 	input(type = "text", name = "title", class = "long-field" maxlength = 200,
-placeholder = "Title", value = cached_title ? cached_title : (thread ? "RE: " + thread.title : ""))
+placeholder = "Title", value = (cached_title ? cached_title : (thread ? "RE: " + thread.title : "")).substring(0, 200))
 	textarea(name = "content" maxlength = 4000)= cached_content
 	input(type = "submit")

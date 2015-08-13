@@ -21,8 +21,6 @@ var page_handlers =	{
 	"author-thread": require("./pages/author_thread.js").handle_request
 };
 
-var not_found_renderer = function(){ return "404"; }
-
 sutil.log("ssf starting up");
 
 /* Connect to Mongo */
@@ -53,21 +51,13 @@ sutil.db.connect(function(err) {
 					if(err)
 					{
 						/* Not a 404 - we have every expectation that the file exists */
-						var text = "Something went wrong. Please try again later.";
-						response.writeHead(500, {"Content-Length": text.length, "Content-Type": "text/plain"});
-						response.end(text);
-
 						sutil.log("Failed to serve static file '%s': %s", request.url, err.toString());
+						sutil.handle_500(request, response);
 					}
 					else
 					{
 						/* Use appropriate MIME type */
-						response.writeHead(200, {
-							"Content-Length": data.length,
-							"Content-Type": filesystem_whitelist[request.url]
-						});
-
-						response.end(data);
+						sutil.writeSimpleResponse(response, data, 200, filesystem_whitelist[request.url]);
 					}
 				});
 			}
@@ -84,9 +74,7 @@ sutil.db.connect(function(err) {
 				else
 				{
 					/* 404 */
-					var data = not_found_renderer({"title": "Page Not Found"});
-					response.writeHead(200, {"Content-Type": "text/html", "Content-Length": data.length});
-					response.end(data);
+					sutil.handle_404(request, response);
 				}
 			}
 		}).listen(32601, function(err) {

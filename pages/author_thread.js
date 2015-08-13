@@ -1,24 +1,30 @@
+/* Internal utilities */
 var sutil = require("../sutil.js");
+
+/* For post request */
 var qs = require("querystring");
 
-var renderer = sutil.wrapWithBuffer(require("jade").compileFile("templates/author_thread.jade"));
+/* Corresponding template */
+var renderer = require("jade").compileFile("templates/author_thread.jade");
 
-module.exports.handle_request= function(params, request, response) {
+/* Request handler */
+module.exports.handle_request = function(params, request, response) {
+	/* POST request means we're creating a new thread */
 	if(request.method == "POST")
 	{
+		/* Buffer and parse post data */
 		var raw = "";
 		request.on("data", function(chunk){ raw += chunk.toString(); })
 		request.on("end", function() {
 			var post_data = qs.parse(raw);
 
+			/* Fill in any missing fields */
 			if(!post_data.nickname) post_data.nickname = "";
 			if(!post_data.password) post_data.password = "";
 			if(!post_data.title) post_data.title = "";
 			if(!post_data.content) post_data.content = "";
 
-			sutil.logf("Request to create thread w/ title '%s', nickname '%s', content '%s'",
-				post_data.title, post_data.nickname, post_data.content);
-
+			/* Create a thread */
 			sutil.db.createThread(
 					post_data.nickname,
 					post_data.password,
@@ -27,34 +33,33 @@ module.exports.handle_request= function(params, request, response) {
 					function(err, res) {
 						if(err)
 						{
+							/* Pass friendly errors onto the user - these display on the formm */
 							if(err instanceof sutil.db.FriendlyError)
 							{
-								var data = renderer({
+								sutil.writeSimpleResponse(response, renderer({
 									"form_error": err,
+
+									/* Whatever he/she just typed */
 									"cached_nickname": post_data.nickname,
 									"cached_title": post_data.title,
-									"cached_content": post_data.content});
-								response.writeHead(200, {"Content-Type": "text/html", "Content-Length": data.length});
-								response.end(data);
+									"cached_content": post_data.content}));
 							}
-							else
+							else /* Internal server error */
 							{
-								throw "oops";
-								/* TODO */
+								sutil.logf("Error authoring thread: %s", err.toString());
+								sutil.handle_500(request, response);
 							}
 						}
-						else
+						else /* Redirect to the new thread */
 						{
-							response.writeHead(303, {"Location": "/view-thread/" + res});
-							response.end();
+							sutil.writeRedirect(response, "/view-thread/" + res._id + "/" + res.friendly_name);
 						}
 					});
 			});
 	}
 	else
 	{
-		var data = renderer();
-		response.writeHead(200, {"Content-Type": "text/html", "Content-Length": data.length});
-		response.end(data);
+		/* Just render the static interface */
+		sutil.writeSimpleResponse(response, renderer());
 	}
 };
