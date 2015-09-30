@@ -7,7 +7,7 @@ ssf is loosely inspired by the charmingly bad forum software hosted on [LetsRun.
 
 ## Demo
 
-As of 13/08/2015, a sample deployment of this server is running at [rcode.ca:32601](http://rcode.ca:32601).
+As of 30/09/2015, a sample deployment of this server is running at http://ssf.as3r.com.
 
 ## Dependencies
 
